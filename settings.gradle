@@ -1,0 +1,5 @@
+rootProject.name='Musiget'
+include ':app'
+include ':core'
+include ':widget'
+include ':repository'
