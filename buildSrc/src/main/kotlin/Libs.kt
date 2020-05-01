@@ -52,9 +52,19 @@ object Libs {
             Versions.espresso_core
 
     /**
+     * https://github.com/mockito/mockito
+     */
+    const val mockito_core: String = "org.mockito:mockito-core:" + Versions.mockito_core
+
+    /**
      * https://developer.android.com/studio
      */
     const val lint_gradle: String = "com.android.tools.lint:lint-gradle:" + Versions.lint_gradle
+
+    /**
+     * http://developer.android.com/tools/extras/support-library.html
+     */
+    const val annotation: String = "androidx.annotation:annotation:" + Versions.annotation
 
     /**
      * https://developer.android.com/jetpack/androidx
@@ -62,9 +72,19 @@ object Libs {
     const val appcompat: String = "androidx.appcompat:appcompat:" + Versions.appcompat
 
     /**
+     * https://github.com/ReactiveX/RxAndroid
+     */
+    const val rxandroid: String = "io.reactivex.rxjava2:rxandroid:" + Versions.rxandroid
+
+    /**
      * https://developer.android.com/jetpack/androidx
      */
     const val core_ktx: String = "androidx.core:core-ktx:" + Versions.core_ktx
+
+    /**
+     * https://github.com/ReactiveX/RxJava
+     */
+    const val rxjava: String = "io.reactivex.rxjava2:rxjava:" + Versions.rxjava
 
     /**
      * https://developer.android.com/studio

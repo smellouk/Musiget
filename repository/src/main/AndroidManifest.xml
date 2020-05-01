@@ -1,2 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.mellouk.repository" />
+    package="io.mellouk.repository">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+</manifest>

@@ -43,6 +43,10 @@ subprojects {
                     vectorDrawables.useSupportLibrary = true
                 }
             }
+
+            dependencies {
+                implementation Libs.annotation
+            }
         }
     }
 }

@@ -26,11 +26,19 @@ object Versions {
 
     const val espresso_core: String = "3.2.0"
 
+    const val mockito_core: String = "3.3.3"
+
     const val lint_gradle: String = "26.6.3"
+
+    const val annotation: String = "1.1.0"
 
     const val appcompat: String = "1.1.0"
 
+    const val rxandroid: String = "2.1.1"
+
     const val core_ktx: String = "1.2.0"
+
+    const val rxjava: String = "2.2.19"
 
     const val aapt2: String = "3.6.3-6040484"
 

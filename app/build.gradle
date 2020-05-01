@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 
 dependencies {
+    implementation project(":repository")
+
     testImplementation Libs.junit_junit
     androidTestImplementation Libs.androidx_test_ext_junit
     androidTestImplementation Libs.espresso_core
@@ -11,4 +13,7 @@ dependencies {
 
     implementation Libs.dagger
     annotationProcessor Libs.dagger_compiler
+
+    implementation Libs.rxjava
+    implementation Libs.rxandroid
 }
