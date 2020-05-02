@@ -1,16 +1,11 @@
 apply plugin: 'com.android.library'
 
 dependencies {
-    implementation project(":common")
-    implementation project(":repository")
-
-    testImplementation Libs.junit_junit
-
     implementation Libs.dagger
     annotationProcessor Libs.dagger_compiler
 
+    implementation Libs.appcompat
+    
     implementation Libs.rxjava
     implementation Libs.rxandroid
-
-    implementation Libs.localbroadcastmanager
 }

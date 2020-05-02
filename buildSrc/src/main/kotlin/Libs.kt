@@ -40,6 +40,12 @@ object Libs {
             Versions.de_fayard_buildsrcversions_gradle_plugin
 
     /**
+     * http://developer.android.com/tools/extras/support-library.html
+     */
+    const val localbroadcastmanager: String =
+            "androidx.localbroadcastmanager:localbroadcastmanager:" + Versions.localbroadcastmanager
+
+    /**
      * http://tools.android.com
      */
     const val constraintlayout: String = "androidx.constraintlayout:constraintlayout:" +
