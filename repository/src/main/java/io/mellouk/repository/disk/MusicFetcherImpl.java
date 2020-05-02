@@ -12,14 +12,15 @@ import io.reactivex.Single;
 
 public class MusicFetcherImpl implements MusicFetcher {
     @NonNull
-    private final Cursor cursor;
+    private final MusicContentCursorProvider contentCursorProvider;
 
     public MusicFetcherImpl(@NonNull final MusicContentCursorProvider contentCursorProvider) {
-        this.cursor = contentCursorProvider.getCursor();
+        this.contentCursorProvider = contentCursorProvider;
     }
 
     @NonNull
     public Single<List<MusicEntity>> getMusic() {
+        final Cursor cursor = contentCursorProvider.getCursor();
         return Single.create(
                 emitter -> {
                     final ArrayList<MusicEntity> musicList = new ArrayList<>();

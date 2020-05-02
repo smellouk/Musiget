@@ -26,19 +26,19 @@ public class MusicContentCursorProvider {
     private static final String MUSIC_QUERY = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
     private static final String SORT_ORDER = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
 
-    private final Cursor cursor;
+    private final Context context;
 
     public MusicContentCursorProvider(@NonNull final Context context) {
-        cursor = context.getContentResolver().query(
+        this.context = context;
+    }
+
+    public Cursor getCursor() {
+        return context.getContentResolver().query(
                 EXTERNAL_CONTENT_URI,
                 PROJECTION,
                 MUSIC_QUERY,
                 null,
                 SORT_ORDER
         );
-    }
-
-    public Cursor getCursor() {
-        return cursor;
     }
 }

@@ -7,33 +7,36 @@ import javax.inject.Inject;
 import io.mellouk.common.base.BaseDataState;
 import io.mellouk.core.domain.getrandommusic.RandomMusicDataState;
 import io.mellouk.core.domain.loadmusic.LoadMusicDataState;
+import io.mellouk.core.domain.play.PlayMusicDataState;
 
-public class ViewStateMapper {
+public class ServiceStateMapper {
     @Inject
-    public ViewStateMapper() {
+    public ServiceStateMapper() {
     }
 
-    ViewState map(@NonNull final BaseDataState dataState) {
-        final ViewState viewState;
+    ServiceState map(@NonNull final BaseDataState dataState) {
+        final ServiceState serviceState;
         if (dataState == LoadMusicDataState.Successful) {
-            viewState = ViewState.PENDING.INSTANCE;
+            serviceState = ServiceState.PENDING.INSTANCE;
         } else if (dataState instanceof LoadMusicDataState.Fail) {
             final LoadMusicDataState.Fail fail = (LoadMusicDataState.Fail) dataState;
-            viewState = map(fail.getThrowable());
+            serviceState = map(fail.getThrowable());
         } else if (dataState instanceof RandomMusicDataState.Successful) {
             final RandomMusicDataState.Successful successful = (RandomMusicDataState.Successful) dataState;
-            viewState = new ViewState.MUSIC_READY(successful.getMusic());
+            serviceState = new ServiceState.MUSIC_READY(successful.getMusic());
         } else if (dataState instanceof RandomMusicDataState.Fail) {
             final RandomMusicDataState.Fail fail = (RandomMusicDataState.Fail) dataState;
-            viewState = map(fail.getThrowable());
+            serviceState = map(fail.getThrowable());
+        } else if (dataState instanceof PlayMusicDataState.CanPlay) {
+            serviceState = ServiceState.PLAY.INSTANCE;
         } else {
-            throw new IllegalArgumentException("Data state is not handled here");
+            serviceState = ServiceState.PENDING.INSTANCE;
         }
 
-        return viewState;
+        return serviceState;
     }
 
-    ViewState.ERROR map(@NonNull final Throwable throwable) {
-        return new ViewState.ERROR(throwable.getMessage());
+    ServiceState.ERROR map(@NonNull final Throwable throwable) {
+        return new ServiceState.ERROR(throwable.getMessage());
     }
 }

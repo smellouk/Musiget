@@ -2,8 +2,6 @@ package io.mellouk.core.domain.getrandommusic;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import javax.inject.Inject;
@@ -15,6 +13,7 @@ import io.mellouk.repository.entity.MusicEntity;
 import io.mellouk.repository.repos.MusicRepository;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.functions.Function;
 
 public class GetRandomMusicUseCase implements BaseUseCase<RandomMusicDataState> {
     @NonNull
@@ -38,18 +37,21 @@ public class GetRandomMusicUseCase implements BaseUseCase<RandomMusicDataState> 
         return Single.just(musicRepository.getCachedMusicList()).toObservable().map(
                 musicEntities -> {
                     if (musicEntities.size() == 0) {
-                        return new RandomMusicDataState.Fail(new Exception("Music list entity is empty!"));
+                        return null;
                     }
-
-                    final List<Music> musicList = new ArrayList<>();
-                    for (final MusicEntity entity : musicEntities) {
-                        musicList.add(mapper.map(entity));
-                    }
-
-                    return new RandomMusicDataState.Successful(
-                            musicList.get(rand.nextInt(musicList.size()))
-                    );
+                    final MusicEntity selectedEntity = musicEntities.get(rand.nextInt(musicEntities.size()));
+                    musicRepository.setCurrentPlayingMusic(selectedEntity);
+                    return mapper.map(selectedEntity);
                 }
-        );
+        ).map(new Function<Music, RandomMusicDataState>() {
+            @Override
+            public RandomMusicDataState apply(final Music music) throws Exception {
+                if (music == null) {
+                    return new RandomMusicDataState.Fail(new Exception("Music list entity is empty!"));
+                } else {
+                    return new RandomMusicDataState.Successful(music);
+                }
+            }
+        });
     }
 }

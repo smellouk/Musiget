@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context="io.mellouk.view.MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_padding">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.75" />
+
+        <TextView
+            android:id="@+id/tv_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_medium_margin"
+            android:textSize="@dimen/artist_text_size"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Artist" />
+
+        <ImageView
+            android:id="@+id/im_album"
+            android:layout_width="@dimen/album_size"
+            android:layout_height="@dimen/album_size"
+            android:layout_marginTop="@dimen/default_large_margin"
+            android:background="@drawable/ic_circle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_artist"
+            app:layout_constraintVertical_bias="0"
+            app:srcCompat="@drawable/ic_music" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_large_margin"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/title_text_size"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/im_album"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/tv_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            tools:text="path" />
+
+        <TextView
+            android:id="@+id/tv_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/default_duration"
+            app:layout_constraintBottom_toTopOf="@id/progress"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/guideline"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintVertical_bias="1"
+            tools:progress="50" />
+
+        <CheckBox
+            android:id="@+id/cb_play"
+            android:layout_width="@dimen/image_play_size"
+            android:layout_height="@dimen/image_play_size"
+            android:background="@drawable/play_button"
+            android:button="@null"
+            android:contentDescription="@string/play"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guideline"
+            app:layout_constraintVertical_bias="0.7" />
+
+        <ImageView
+            android:id="@+id/im_next"
+            android:layout_width="@dimen/image_next_size"
+            android:layout_height="@dimen/image_next_size"
+            android:contentDescription="@string/next"
+            app:layout_constraintBottom_toBottomOf="@+id/cb_play"
+            app:layout_constraintLeft_toRightOf="@id/cb_play"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cb_play"
+            app:srcCompat="@drawable/ic_skip_next" />
+
+        <ImageView
+            android:id="@+id/im_stop"
+            android:layout_width="@dimen/image_previous_size"
+            android:layout_height="@dimen/image_previous_size"
+            android:contentDescription="@string/next"
+            app:layout_constraintBottom_toBottomOf="@id/cb_play"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/cb_play"
+            app:layout_constraintTop_toTopOf="@id/cb_play"
+            app:srcCompat="@drawable/ic_stop" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

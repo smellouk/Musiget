@@ -4,6 +4,7 @@ dependencies {
     implementation project(":repository")
     implementation project(":common")
     implementation project(":core")
+    implementation project(":view")
 
     testImplementation Libs.junit_junit
     androidTestImplementation Libs.androidx_test_ext_junit
@@ -18,4 +19,6 @@ dependencies {
 
     implementation Libs.rxjava
     implementation Libs.rxandroid
+
+    implementation Libs.localbroadcastmanager
 }

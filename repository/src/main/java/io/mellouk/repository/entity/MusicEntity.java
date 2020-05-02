@@ -14,6 +14,10 @@ public class MusicEntity {
     @Nullable
     private final String path;
 
+    public MusicEntity() {
+        this(-1, null, null, null, null);
+    }
+
     public MusicEntity(final int id,
                        @Nullable final String title,
                        @Nullable final String album,

@@ -10,23 +10,41 @@ import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import io.mellouk.common.base.BaseService;
 import io.mellouk.common.domain.Music;
+import io.mellouk.common.domain.MusicProgress;
 import io.mellouk.common.utils.BroadcastConstants;
+import io.mellouk.common.utils.FormatUtils;
+import io.mellouk.common.utils.RxUtils;
 import io.mellouk.core.di.CoreComponent;
+import io.reactivex.Flowable;
+import io.reactivex.MaybeSource;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
-public class MusicService extends BaseService<CoreComponent.ComponentProvider, ViewState, MusicViewModel>
+public class MusicService extends BaseService<CoreComponent.ComponentProvider, ServiceState, MusicViewModel>
         implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+    public static final String PLAY_OR_PAUSE_ACTION = "PLAY_OR_PAUSE_ACTION";
+    public static final String PLAY_OR_PAUSE_KEY = "PLAY_OR_PAUSE_KEY";
+    public static final String STOP_ACTION = "STOP_ACTION";
+    public static final String NEXT_ACTION = "NEXT_ACTION";
+
     private final static String TAG = MusicService.class.getSimpleName();
+    private static final int FREQUENCY = 1;
     final Intent musicIntent = new Intent(BroadcastConstants.MUSIC_SERVICE_MUSIC_ACTION);
     final Intent errorIntent = new Intent(BroadcastConstants.MUSIC_SERVICE_ERROR_ACTION);
-    final Intent progressIntent = new Intent(BroadcastConstants.MUSIC_SERVICE_MUSIC_ACTION);
+    final Intent progressIntent = new Intent(BroadcastConstants.MUSIC_SERVICE_PROGRESS_ACTION);
+    final Intent stopIntent = new Intent(BroadcastConstants.MUSIC_SERVICE_STOP_ACTION);
 
     @Inject
     LocalBroadcastManager localBroadcastManager;
+    @Inject
+    FormatUtils formatUtils;
+
     private MediaPlayer mediaPlayer;
 
     @Override
@@ -51,19 +69,51 @@ public class MusicService extends BaseService<CoreComponent.ComponentProvider, V
     }
 
     @Override
-    public void renderViewState(final ViewState state) {
-        if (state instanceof ViewState.INITIAL) {
+    public void handleServiceState(final ServiceState state) {
+        if (state instanceof ServiceState.INITIAL) {
             renderDefaultViewState();
+            startObservingDuration();
             viewModel.onCommand(Command.LOAD_MUSIC_LIST);
-        } else if (state instanceof ViewState.PENDING) {
+        } else if (state instanceof ServiceState.PENDING) {
             renderDefaultViewState();
-        } else if (state instanceof ViewState.MUSIC_READY) {
+        } else if (state instanceof ServiceState.MUSIC_READY) {
             handleMusicReadyState(state);
-        } else if (state instanceof ViewState.ERROR) {
+        } else if (state instanceof ServiceState.ERROR) {
             handleErrorState(state);
+        } else if (state instanceof ServiceState.PLAY) {
+            mediaPlayer.start();
+        } else if (state instanceof ServiceState.PAUSE) {
+            mediaPlayer.pause();
+        } else if (state instanceof ServiceState.STOP) {
+            stopPlayer();
         } else {
             throw new IllegalArgumentException("State: " + state.getClass().getName() + " is not handled");
         }
+    }
+
+    @Override
+    public int onStartCommand(final Intent intent, final int flags, final int startId) {
+        final String action = intent.getAction();
+        if (action != null) {
+            switch (action) {
+                case PLAY_OR_PAUSE_ACTION:
+                    handlePlayPauseAction(intent);
+                    break;
+                case NEXT_ACTION:
+                    viewModel.onCommand(Command.NEXT_MUSIC);
+                    break;
+                case STOP_ACTION:
+                    viewModel.onCommand(Command.STOP);
+                    break;
+            }
+        }
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        releaseMediaPlayer();
+        super.onDestroy();
     }
 
     @Override
@@ -73,8 +123,16 @@ public class MusicService extends BaseService<CoreComponent.ComponentProvider, V
 
     @Override
     public void onCompletion(final MediaPlayer mp) {
-        mp.stop();
         viewModel.onCommand(Command.NEXT_MUSIC);
+    }
+
+    private void handlePlayPauseAction(@NonNull final Intent intent) {
+        final boolean isPlay = intent.getBooleanExtra(PLAY_OR_PAUSE_KEY, false);
+        if (isPlay) {
+            viewModel.onCommand(Command.PLAY);
+        } else {
+            viewModel.onCommand(Command.PAUSE);
+        }
     }
 
     private void initMediaPlayer() {
@@ -102,14 +160,24 @@ public class MusicService extends BaseService<CoreComponent.ComponentProvider, V
         }
     }
 
-    private void handleMusicReadyState(final ViewState state) {
-        final ViewState.MUSIC_READY musicReadyState = (ViewState.MUSIC_READY) state;
+    private void startObservingDuration() {
+        compositeDisposable.add(
+                Flowable.interval(FREQUENCY, TimeUnit.SECONDS, Schedulers.io())
+                        .onBackpressureDrop()
+                        .retry()
+                        .flatMapMaybe((Function<Long, MaybeSource<MusicProgress>>) aLong -> RxUtils.ofNullable(getMusicProgress()))
+                        .subscribe(this::broadcastProgress, throwable -> broadcastError(throwable.getMessage()))
+        );
+    }
+
+    private void handleMusicReadyState(final ServiceState state) {
+        final ServiceState.MUSIC_READY musicReadyState = (ServiceState.MUSIC_READY) state;
         playMusic(musicReadyState.getMusic());
         broadcastMusic(musicReadyState.getMusic());
     }
 
-    private void handleErrorState(final ViewState state) {
-        final ViewState.ERROR errorState = (ViewState.ERROR) state;
+    private void handleErrorState(final ServiceState state) {
+        final ServiceState.ERROR errorState = (ServiceState.ERROR) state;
         broadcastError(errorState.getMessage());
     }
 
@@ -120,6 +188,43 @@ public class MusicService extends BaseService<CoreComponent.ComponentProvider, V
 
     private void broadcastError(@Nullable final String error) {
         errorIntent.putExtra(BroadcastConstants.MUSIC_SERVICE_ERROR_KEY, error);
-        localBroadcastManager.sendBroadcast(musicIntent);
+        localBroadcastManager.sendBroadcast(errorIntent);
+    }
+
+    private void broadcastProgress(@Nullable final MusicProgress progress) {
+        progressIntent.putExtra(BroadcastConstants.MUSIC_SERVICE_PROGRESS_KEY, progress);
+        localBroadcastManager.sendBroadcast(progressIntent);
+    }
+
+    @Nullable
+    private MusicProgress getMusicProgress() {
+        if (mediaPlayer == null || !mediaPlayer.isPlaying()) {
+            return null;
+        }
+
+        try {
+            final int currentPosition = mediaPlayer.getCurrentPosition();
+            final int duration = mediaPlayer.getDuration();
+            final String currentStr = formatUtils.toTime(currentPosition);
+            final String durationStr = formatUtils.toTime(duration);
+            final int progress = formatUtils.toProgress(currentPosition, duration);
+            return new MusicProgress(currentStr, durationStr, progress);
+        } catch (final Exception ignore) {
+            return null;
+        }
+    }
+
+    private void stopPlayer() {
+        mediaPlayer.pause();
+        mediaPlayer.seekTo(0);
+        localBroadcastManager.sendBroadcast(stopIntent);
+    }
+
+    private void releaseMediaPlayer() {
+        mediaPlayer.setOnPreparedListener(null);
+        mediaPlayer.setOnCompletionListener(null);
+        mediaPlayer.release();
+        mediaPlayer.stop();
+        mediaPlayer = null;
     }
 }

@@ -6,8 +6,9 @@ import io.mellouk.core.di.CoreComponent;
 import io.mellouk.musiget.di.AppComponent;
 import io.mellouk.musiget.di.AppModule;
 import io.mellouk.musiget.di.DaggerAppComponent;
+import io.mellouk.view.di.MainComponent;
 
-public class App extends Application implements CoreComponent.ComponentProvider {
+public class App extends Application implements CoreComponent.ComponentProvider, MainComponent.ComponentProvider {
     private AppComponent appComponent;
 
     @Override
@@ -21,5 +22,10 @@ public class App extends Application implements CoreComponent.ComponentProvider 
     @Override
     public CoreComponent getCoreComponent() {
         return appComponent.getCoreComponent();
+    }
+
+    @Override
+    public MainComponent getMainComponent() {
+        return appComponent.getMainComponent();
     }
 }

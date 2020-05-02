@@ -21,7 +21,18 @@ public class LoadMusicListUseCase implements BaseUseCase<LoadMusicDataState> {
     public Observable<LoadMusicDataState> buildObservable() {
         return musicRepository.getMusicList().toObservable()
                 .doOnNext(musicRepository::cacheMusicList)
-                .doOnError(LoadMusicDataState.Fail::new)
-                .map(musicEntities -> LoadMusicDataState.Successful);
+                .map(musicEntities -> {
+                    if (musicEntities.size() == 0) {
+                        return new LoadMusicDataState.Fail(new ListEmptyException());
+                    } else {
+                        return LoadMusicDataState.Successful;
+                    }
+                });
+    }
+
+    private static class ListEmptyException extends Exception {
+        ListEmptyException() {
+            super("External storage does not have any music, please add music and restart the app.");
+        }
     }
 }

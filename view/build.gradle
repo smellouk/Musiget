@@ -1,0 +1,24 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.butterknife'
+
+dependencies {
+    implementation project(":common")
+    implementation project(":core")
+    implementation project(":repository")
+
+    testImplementation Libs.junit_junit
+
+    implementation Libs.appcompat
+    implementation Libs.constraintlayout
+
+    implementation Libs.dagger
+    annotationProcessor Libs.dagger_compiler
+
+    implementation Libs.rxjava
+    implementation Libs.rxandroid
+
+    implementation Libs.localbroadcastmanager
+
+    implementation Libs.butterknife
+    annotationProcessor Libs.butterknife_compiler
+}

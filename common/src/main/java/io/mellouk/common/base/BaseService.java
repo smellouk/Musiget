@@ -15,7 +15,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public abstract class BaseService<ComponentProvider extends BaseComponentProvider,
         State extends BaseViewState,
         ViewModel extends BaseServiceViewModel<State>> extends Service {
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    protected final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     protected ComponentProvider componentProvider;
     protected ViewModel viewModel;
@@ -38,7 +38,7 @@ public abstract class BaseService<ComponentProvider extends BaseComponentProvide
 
         viewModel = viewModelFactory.get(getViewModelClass());
 
-        compositeDisposable.add(viewModel.stateObserver.subscribe(this::renderViewState));
+        compositeDisposable.add(viewModel.stateObserver.subscribe(this::handleServiceState));
     }
 
     @Override
@@ -65,7 +65,7 @@ public abstract class BaseService<ComponentProvider extends BaseComponentProvide
 
     public abstract Class<ComponentProvider> getComponentProviderClass();
 
-    public abstract void renderViewState(State state);
+    public abstract void handleServiceState(State state);
 
     private void attachComponentProvider() {
         final Class<ComponentProvider> componentProviderClass = getComponentProviderClass();

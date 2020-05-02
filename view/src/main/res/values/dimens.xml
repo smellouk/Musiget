@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="default_medium_margin">8dp</dimen>
+    <dimen name="artist_text_size">24sp</dimen>
+    <dimen name="album_size">250dp</dimen>
+    <dimen name="default_large_margin">32dp</dimen>
+    <dimen name="title_text_size">26sp</dimen>
+    <dimen name="default_xl_margin">64dp</dimen>
+    <dimen name="image_play_size">128dp</dimen>
+    <dimen name="image_next_size">64dp</dimen>
+    <dimen name="image_previous_size">64dp</dimen>
+    <dimen name="default_padding">16dp</dimen>
+</resources>

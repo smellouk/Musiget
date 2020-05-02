@@ -19,6 +19,23 @@ object Libs {
             Versions.com_google_dagger
 
     /**
+     * https://github.com/JakeWharton/butterknife/
+     */
+    const val butterknife: String = "com.jakewharton:butterknife:" + Versions.com_jakewharton
+
+    /**
+     * https://github.com/JakeWharton/butterknife/
+     */
+    const val butterknife_compiler: String = "com.jakewharton:butterknife-compiler:" +
+            Versions.com_jakewharton
+
+    /**
+     * https://github.com/JakeWharton/butterknife/
+     */
+    const val butterknife_gradle_plugin: String = "com.jakewharton:butterknife-gradle-plugin:" +
+            Versions.com_jakewharton
+
+    /**
      * https://developer.android.com/studio
      */
     const val com_android_tools_build_gradle: String = "com.android.tools.build:gradle:" +

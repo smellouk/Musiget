@@ -11,7 +11,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public abstract class BaseActivityViewModel<State extends BaseViewState> extends ViewModel {
-    final MutableLiveData<State> stateObserver = new MutableLiveData<>();
+    protected final MutableLiveData<State> stateObserver = new MutableLiveData<>();
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 

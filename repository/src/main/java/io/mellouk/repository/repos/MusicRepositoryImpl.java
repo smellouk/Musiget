@@ -1,6 +1,7 @@
 package io.mellouk.repository.repos;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +13,8 @@ import io.reactivex.Single;
 public class MusicRepositoryImpl implements MusicRepository {
     @NonNull
     private final MusicFetcher fetcher;
+    @Nullable
+    private MusicEntity current = null;
 
     @NonNull
     private List<MusicEntity> musicEntities = Collections.emptyList();
@@ -32,5 +35,16 @@ public class MusicRepositoryImpl implements MusicRepository {
     @Override
     public List<MusicEntity> getCachedMusicList() {
         return musicEntities;
+    }
+
+    @Nullable
+    @Override
+    public MusicEntity getCurrentPlayingMusic() {
+        return current;
+    }
+
+    @Override
+    public void setCurrentPlayingMusic(@Nullable final MusicEntity musicEntity) {
+        current = musicEntity;
     }
 }

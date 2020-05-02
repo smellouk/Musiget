@@ -1,5 +1,7 @@
 package io.mellouk.repository.repos;
 
+import androidx.annotation.Nullable;
+
 import java.util.List;
 
 import io.mellouk.repository.entity.MusicEntity;
@@ -11,4 +13,9 @@ public interface MusicRepository {
     void cacheMusicList(final List<MusicEntity> musicEntities);
 
     List<MusicEntity> getCachedMusicList();
+
+    @Nullable
+    MusicEntity getCurrentPlayingMusic();
+
+    void setCurrentPlayingMusic(@Nullable final MusicEntity musicEntity);
 }
