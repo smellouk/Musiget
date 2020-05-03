@@ -3,7 +3,7 @@ apply plugin: 'com.jakewharton.butterknife'
 
 dependencies {
     implementation project(":common")
-    implementation project(":core")
+    api project(":core")
     implementation project(":repository")
 
     testImplementation Libs.junit_junit

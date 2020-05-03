@@ -1,2 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.mellouk.core" />
+    package="io.mellouk.core">
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <application>
+        <service
+            android:name=".MusicService"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
+    </application>
+</manifest>

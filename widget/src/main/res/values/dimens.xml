@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="card_radius_widget">2dp</dimen>
+    <dimen name="album_size_image">80dp</dimen>
+    <dimen name="media_action_size">144dp</dimen>
+    <dimen name="player_min_size_widget">256dp</dimen>
+    <dimen name="player_min_height_widget">@dimen/album_size_image</dimen>
+    <dimen name="title_size_widget">22sp</dimen>
+    <dimen name="progress_text_size">18sp</dimen>
+</resources>

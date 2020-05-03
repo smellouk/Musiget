@@ -9,10 +9,13 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class ActivityViewModelFactory extends BaseViewModelFactory<ViewModel> implements ViewModelProvider.Factory {
+public class ActivityViewModelFactory implements ViewModelProvider.Factory {
+    @NonNull
+    private final Map<Class<? extends ViewModel>, Provider<ViewModel>> viewModels;
+
     @Inject
     public ActivityViewModelFactory(@NonNull final Map<Class<? extends ViewModel>, Provider<ViewModel>> viewModels) {
-        super(viewModels);
+        this.viewModels = viewModels;
     }
 
     @NonNull

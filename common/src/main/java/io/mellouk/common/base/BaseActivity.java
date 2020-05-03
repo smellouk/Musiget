@@ -1,6 +1,7 @@
 package io.mellouk.common.base;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.widget.Toast;
 
@@ -22,6 +23,9 @@ public abstract class BaseActivity<ComponentProvider extends BaseComponentProvid
     protected ViewModel viewModel;
     @Inject
     ActivityViewModelFactory viewModelFactory;
+
+    @Inject
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onStart() {
@@ -46,7 +50,9 @@ public abstract class BaseActivity<ComponentProvider extends BaseComponentProvid
     }
 
     public boolean isPermissionGranted(final String permission) {
-        return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED;
+        final boolean isPermissionGranted = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED;
+        sharedPreferences.edit().putBoolean(permission, isPermissionGranted).apply();
+        return isPermissionGranted;
     }
 
     public void requestPermission(final String permission) {

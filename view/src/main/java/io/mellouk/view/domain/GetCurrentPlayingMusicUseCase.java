@@ -5,7 +5,9 @@ import androidx.annotation.NonNull;
 import javax.inject.Inject;
 
 import io.mellouk.common.base.BaseUseCase;
+import io.mellouk.common.domain.CurrentMusicDataState;
 import io.mellouk.common.utils.RxUtils;
+import io.mellouk.core.domain.MusicMapper;
 import io.mellouk.repository.entity.MusicEntity;
 import io.mellouk.repository.repos.MusicRepository;
 import io.mellouk.view.di.MainScope;
@@ -54,7 +56,7 @@ public class GetCurrentPlayingMusicUseCase implements BaseUseCase<CurrentMusicDa
 
     public static class PreparingMusicException extends Exception {
         PreparingMusicException() {
-            super("Preparing music");
+            super("Failed to get music, try to add music or update storage permission.");
         }
     }
 }

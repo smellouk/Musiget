@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import javax.inject.Inject;
 
 import io.mellouk.common.base.BaseDataState;
-import io.mellouk.view.domain.CurrentMusicDataState;
+import io.mellouk.common.domain.CurrentMusicDataState;
 import io.mellouk.view.domain.GetCurrentPlayingMusicUseCase.PreparingMusicException;
 
 public class ViewStateMapper {

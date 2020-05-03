@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import javax.inject.Inject;
 
 import io.mellouk.common.Commandable;
-import io.mellouk.common.base.BaseServiceViewModel;
+import io.mellouk.common.base.BaseViewModel;
 import io.mellouk.core.di.CoreScope;
 import io.mellouk.core.domain.getrandommusic.GetRandomMusicUseCase;
 import io.mellouk.core.domain.loadmusic.LoadMusicDataState;
@@ -14,7 +14,7 @@ import io.mellouk.core.domain.play.PlayMusicDataState;
 import io.mellouk.core.domain.play.PlayMusicUseCase;
 
 @CoreScope
-public class MusicViewModel extends BaseServiceViewModel<ServiceState> implements Commandable<Command> {
+public class MusicViewModel extends BaseViewModel<ServiceState> implements Commandable<Command> {
     @NonNull
     private final LoadMusicListUseCase loadMusicListUseCase;
 

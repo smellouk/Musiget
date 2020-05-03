@@ -5,7 +5,7 @@ dependencies {
     annotationProcessor Libs.dagger_compiler
 
     implementation Libs.appcompat
-    
+
     implementation Libs.rxjava
     implementation Libs.rxandroid
 }

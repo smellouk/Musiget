@@ -6,11 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import dagger.MapKey;
-import io.mellouk.common.base.BaseServiceViewModel;
+import io.mellouk.common.base.BaseViewModel;
 
 @MapKey
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ServiceViewModelKey {
-    Class<? extends BaseServiceViewModel> value();
+public @interface ViewModelKey {
+    Class<? extends BaseViewModel> value();
 }

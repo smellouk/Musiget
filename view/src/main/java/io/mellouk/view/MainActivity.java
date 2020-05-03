@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
@@ -30,12 +31,11 @@ import io.mellouk.common.utils.BroadcastConstants;
 import io.mellouk.core.MusicService;
 import io.mellouk.view.di.MainComponent;
 
-public class MainActivity extends BaseActivity<MainComponent.ComponentProvider, ViewState, MainActivityViewModel> {
+public class MainActivity extends BaseActivity<MainComponent.ComponentProvider, ViewState, MainViewModel> {
     private static final String PERMISSION_TO_READ_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
     private static final boolean IS_PLAYING = true;
-    private final IntentFilter intentFilter = new IntentFilter();
     private final CompoundButton.OnCheckedChangeListener checkedListener = (buttonView, isChecked) -> {
-        onPlayBtnClick(isChecked);
+        onPlayBtnClick();
     };
 
     @BindView(R2.id.tv_artist)
@@ -65,8 +65,12 @@ public class MainActivity extends BaseActivity<MainComponent.ComponentProvider, 
     View imNext;
     @BindView(R2.id.im_stop)
     View imStop;
+
     @Inject
     LocalBroadcastManager localBroadcastManager;
+
+    @Inject
+    IntentFilter intentFilter;
 
     @Override
 
@@ -83,8 +87,8 @@ public class MainActivity extends BaseActivity<MainComponent.ComponentProvider, 
     }
 
     @Override
-    public Class<MainActivityViewModel> getViewModelClass() {
-        return MainActivityViewModel.class;
+    public Class<MainViewModel> getViewModelClass() {
+        return MainViewModel.class;
     }
 
     @Override
@@ -153,11 +157,6 @@ public class MainActivity extends BaseActivity<MainComponent.ComponentProvider, 
     }
 
     private void registerReceiver() {
-        intentFilter.addAction(BroadcastConstants.MUSIC_SERVICE_MUSIC_ACTION);
-        intentFilter.addAction(BroadcastConstants.MUSIC_SERVICE_PROGRESS_ACTION);
-        intentFilter.addAction(BroadcastConstants.MUSIC_SERVICE_ERROR_ACTION);
-        intentFilter.addAction(BroadcastConstants.MUSIC_SERVICE_STOP_ACTION);
-
         localBroadcastManager.registerReceiver(receiver, intentFilter);
     }
 
@@ -235,20 +234,19 @@ public class MainActivity extends BaseActivity<MainComponent.ComponentProvider, 
         resetView();
         final Intent intent = new Intent(this, MusicService.class);
         intent.setAction(MusicService.NEXT_ACTION);
-        startService(intent);
+        startMusicService(intent);
     }
 
     private void onStopMusic() {
         final Intent intent = new Intent(this, MusicService.class);
         intent.setAction(MusicService.STOP_ACTION);
-        startService(intent);
+        startMusicService(intent);
     }
 
-    private void onPlayBtnClick(final boolean isPlay) {
+    private void onPlayBtnClick() {
         final Intent intent = new Intent(this, MusicService.class);
         intent.setAction(MusicService.PLAY_OR_PAUSE_ACTION);
-        intent.putExtra(MusicService.PLAY_OR_PAUSE_KEY, isPlay);
-        startService(intent);
+        startMusicService(intent);
     }
 
     private void resetView() {
@@ -261,5 +259,13 @@ public class MainActivity extends BaseActivity<MainComponent.ComponentProvider, 
         cbPlay.setOnCheckedChangeListener(null);
         cbPlay.setChecked(isPlaying);
         cbPlay.setOnCheckedChangeListener(checkedListener);
+    }
+
+    private void startMusicService(@NonNull final Intent intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
     }
 }

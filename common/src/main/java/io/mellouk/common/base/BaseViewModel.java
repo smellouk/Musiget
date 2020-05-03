@@ -9,12 +9,12 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
-public abstract class BaseServiceViewModel<State extends BaseViewState> {
+public abstract class BaseViewModel<State extends BaseViewState> {
     protected final BehaviorSubject<State> stateObserver = BehaviorSubject.create();
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public BaseServiceViewModel() {
+    public BaseViewModel() {
         stateObserver.onNext(getInitialState());
     }
 

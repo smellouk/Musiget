@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/album_size_image"
+    tools:background="@android:color/darker_gray">
+
+    <LinearLayout
+        android:id="@+id/player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/card"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/album_size_image"
+            android:layout_height="@dimen/album_size_image"
+            android:background="@color/colorAccent"
+            android:src="@drawable/ic_music"
+            android:tint="@android:color/white"
+            tools:ignore="ContentDescription" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/default_medium_margin"
+            android:layout_marginRight="@dimen/default_medium_margin"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/title_size_widget"
+                tools:text="Title Title Title Title Title" />
+
+            <TextView
+                android:id="@+id/tv_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_small_margin"
+                android:ellipsize="end"
+                android:gravity="bottom"
+                android:maxLines="0"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textSize="@dimen/progress_text_size"
+                tools:text="00:00 - 00:00" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/media_action_size"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/default_small_margin"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/im_stop"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector"
+                android:src="@drawable/ic_stop"
+                android:tint="@color/colorPrimaryDark"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/im_play"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@drawable/selector"
+                android:src="@drawable/ic_play"
+                android:tint="@color/colorPrimaryDark"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/im_next"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector"
+                android:src="@drawable/ic_skip_next"
+                android:tint="@color/colorPrimaryDark"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card"
+        android:gravity="center"
+        android:text="@string/permission_note"
+        android:textSize="24sp"
+        android:visibility="gone" />
+</FrameLayout>

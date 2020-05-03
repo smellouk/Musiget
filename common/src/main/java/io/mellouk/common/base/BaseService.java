@@ -9,19 +9,19 @@ import androidx.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import io.mellouk.common.utils.factory.BaseServiceViewModelFactory;
+import io.mellouk.common.utils.factory.BaseViewModelFactory;
 import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class BaseService<ComponentProvider extends BaseComponentProvider,
         State extends BaseViewState,
-        ViewModel extends BaseServiceViewModel<State>> extends Service {
+        ViewModel extends BaseViewModel<State>> extends Service {
     protected final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     protected ComponentProvider componentProvider;
     protected ViewModel viewModel;
 
     @Inject
-    BaseServiceViewModelFactory viewModelFactory;
+    BaseViewModelFactory viewModelFactory;
 
     @Nullable
     @Override
@@ -55,7 +55,7 @@ public abstract class BaseService<ComponentProvider extends BaseComponentProvide
         super.onTaskRemoved(rootIntent);
     }
 
-    public void renderDefaultViewState() {
+    public void defaultServiceState() {
         // NO OP
     }
 

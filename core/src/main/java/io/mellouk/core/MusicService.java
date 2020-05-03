@@ -1,5 +1,6 @@
 package io.mellouk.core;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -7,6 +8,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.Objects;
@@ -29,7 +31,6 @@ import io.reactivex.schedulers.Schedulers;
 public class MusicService extends BaseService<CoreComponent.ComponentProvider, ServiceState, MusicViewModel>
         implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
     public static final String PLAY_OR_PAUSE_ACTION = "PLAY_OR_PAUSE_ACTION";
-    public static final String PLAY_OR_PAUSE_KEY = "PLAY_OR_PAUSE_KEY";
     public static final String STOP_ACTION = "STOP_ACTION";
     public static final String NEXT_ACTION = "NEXT_ACTION";
 
@@ -42,12 +43,17 @@ public class MusicService extends BaseService<CoreComponent.ComponentProvider, S
 
     @Inject
     LocalBroadcastManager localBroadcastManager;
+
     @Inject
     FormatUtils formatUtils;
+
+    @Inject
+    NotificationCompat.Builder notificationBuilder;
 
     private MediaPlayer mediaPlayer;
 
     @Override
+
     public void inject() {
         componentProvider.getCoreComponent().inject(this);
     }
@@ -71,11 +77,11 @@ public class MusicService extends BaseService<CoreComponent.ComponentProvider, S
     @Override
     public void handleServiceState(final ServiceState state) {
         if (state instanceof ServiceState.INITIAL) {
-            renderDefaultViewState();
+            defaultServiceState();
             startObservingDuration();
             viewModel.onCommand(Command.LOAD_MUSIC_LIST);
         } else if (state instanceof ServiceState.PENDING) {
-            renderDefaultViewState();
+            defaultServiceState();
         } else if (state instanceof ServiceState.MUSIC_READY) {
             handleMusicReadyState(state);
         } else if (state instanceof ServiceState.ERROR) {
@@ -97,7 +103,7 @@ public class MusicService extends BaseService<CoreComponent.ComponentProvider, S
         if (action != null) {
             switch (action) {
                 case PLAY_OR_PAUSE_ACTION:
-                    handlePlayPauseAction(intent);
+                    handlePlayPauseAction();
                     break;
                 case NEXT_ACTION:
                     viewModel.onCommand(Command.NEXT_MUSIC);
@@ -107,13 +113,7 @@ public class MusicService extends BaseService<CoreComponent.ComponentProvider, S
                     break;
             }
         }
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public void onDestroy() {
-        releaseMediaPlayer();
-        super.onDestroy();
+        return START_STICKY;
     }
 
     @Override
@@ -126,12 +126,17 @@ public class MusicService extends BaseService<CoreComponent.ComponentProvider, S
         viewModel.onCommand(Command.NEXT_MUSIC);
     }
 
-    private void handlePlayPauseAction(@NonNull final Intent intent) {
-        final boolean isPlay = intent.getBooleanExtra(PLAY_OR_PAUSE_KEY, false);
-        if (isPlay) {
-            viewModel.onCommand(Command.PLAY);
-        } else {
+    @Override
+    public void onDestroy() {
+        releasePlayer();
+        super.onDestroy();
+    }
+
+    private void handlePlayPauseAction() {
+        if (mediaPlayer.isPlaying()) {
             viewModel.onCommand(Command.PAUSE);
+        } else {
+            viewModel.onCommand(Command.PLAY);
         }
     }
 
@@ -174,6 +179,7 @@ public class MusicService extends BaseService<CoreComponent.ComponentProvider, S
         final ServiceState.MUSIC_READY musicReadyState = (ServiceState.MUSIC_READY) state;
         playMusic(musicReadyState.getMusic());
         broadcastMusic(musicReadyState.getMusic());
+        notificationBuilder.setContentTitle(musicReadyState.getMusic().getTitle());
     }
 
     private void handleErrorState(final ServiceState state) {
@@ -191,7 +197,11 @@ public class MusicService extends BaseService<CoreComponent.ComponentProvider, S
         localBroadcastManager.sendBroadcast(errorIntent);
     }
 
-    private void broadcastProgress(@Nullable final MusicProgress progress) {
+    private void broadcastProgress(@NonNull final MusicProgress progress) {
+        final Notification notification = notificationBuilder
+                .setContentText(progress.getCurrentPosition() + " - " + progress.getDuration())
+                .build();
+        startForeground(1, notification);
         progressIntent.putExtra(BroadcastConstants.MUSIC_SERVICE_PROGRESS_KEY, progress);
         localBroadcastManager.sendBroadcast(progressIntent);
     }
@@ -199,6 +209,10 @@ public class MusicService extends BaseService<CoreComponent.ComponentProvider, S
     @Nullable
     private MusicProgress getMusicProgress() {
         if (mediaPlayer == null || !mediaPlayer.isPlaying()) {
+            final Notification notification = notificationBuilder
+                    .setContentText("Player is paused")
+                    .build();
+            startForeground(1, notification);
             return null;
         }
 
@@ -220,11 +234,12 @@ public class MusicService extends BaseService<CoreComponent.ComponentProvider, S
         localBroadcastManager.sendBroadcast(stopIntent);
     }
 
-    private void releaseMediaPlayer() {
-        mediaPlayer.setOnPreparedListener(null);
-        mediaPlayer.setOnCompletionListener(null);
-        mediaPlayer.release();
-        mediaPlayer.stop();
-        mediaPlayer = null;
+    private void releasePlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.setOnCompletionListener(null);
+            mediaPlayer.setOnPreparedListener(null);
+            mediaPlayer = null;
+        }
     }
 }

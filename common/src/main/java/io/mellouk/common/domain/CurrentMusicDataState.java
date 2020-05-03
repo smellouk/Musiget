@@ -1,9 +1,8 @@
-package io.mellouk.view.domain;
+package io.mellouk.common.domain;
 
 import androidx.annotation.NonNull;
 
 import io.mellouk.common.base.BaseDataState;
-import io.mellouk.common.domain.Music;
 
 public class CurrentMusicDataState implements BaseDataState {
     public static class Successful extends CurrentMusicDataState {

@@ -6,10 +6,8 @@ import androidx.annotation.Nullable;
 import javax.inject.Inject;
 
 import io.mellouk.common.domain.Music;
-import io.mellouk.core.di.CoreScope;
 import io.mellouk.repository.entity.MusicEntity;
 
-@CoreScope
 public class MusicMapper {
 
     private static final String DEFAULT_STRING = "";

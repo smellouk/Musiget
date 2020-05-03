@@ -10,7 +10,7 @@ import io.mellouk.view.di.MainScope;
 import io.mellouk.view.domain.GetCurrentPlayingMusicUseCase;
 
 @MainScope
-public class MainActivityViewModel extends BaseActivityViewModel<ViewState> implements Commandable<Command> {
+public class MainViewModel extends BaseActivityViewModel<ViewState> implements Commandable<Command> {
     @NonNull
     private final GetCurrentPlayingMusicUseCase getCurrentPlayingMusicUseCase;
     @NonNull
@@ -18,8 +18,8 @@ public class MainActivityViewModel extends BaseActivityViewModel<ViewState> impl
 
 
     @Inject
-    MainActivityViewModel(@NonNull final GetCurrentPlayingMusicUseCase getCurrentPlayingMusicUseCase,
-                          @NonNull final ViewStateMapper viewStateMapper
+    MainViewModel(@NonNull final GetCurrentPlayingMusicUseCase getCurrentPlayingMusicUseCase,
+                  @NonNull final ViewStateMapper viewStateMapper
     ) {
         this.getCurrentPlayingMusicUseCase = getCurrentPlayingMusicUseCase;
         this.viewStateMapper = viewStateMapper;

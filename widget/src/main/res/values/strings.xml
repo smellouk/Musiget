@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_note">You need to accept storage permission to use this widget, click on the widget to accept it.</string>
+</resources>
