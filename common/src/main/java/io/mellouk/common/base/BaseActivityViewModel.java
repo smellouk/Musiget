@@ -1,6 +1,7 @@
 package io.mellouk.common.base;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -11,7 +12,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public abstract class BaseActivityViewModel<State extends BaseViewState> extends ViewModel {
-    protected final MutableLiveData<State> stateObserver = new MutableLiveData<>();
+    @VisibleForTesting
+    public final MutableLiveData<State> stateObserver = new MutableLiveData<>();
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 

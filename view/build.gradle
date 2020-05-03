@@ -7,6 +7,8 @@ dependencies {
     implementation project(":repository")
 
     testImplementation Libs.junit_junit
+    testImplementation Libs.mockito_core
+    testImplementation Libs.core_testing
 
     implementation Libs.appcompat
     implementation Libs.constraintlayout

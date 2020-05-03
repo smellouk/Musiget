@@ -75,6 +75,11 @@ object Libs {
             Versions.espresso_core
 
     /**
+     * https://developer.android.com/topic/libraries/architecture/index.html
+     */
+    const val core_testing: String = "androidx.arch.core:core-testing:" + Versions.core_testing
+
+    /**
      * https://github.com/mockito/mockito
      */
     const val mockito_core: String = "org.mockito:mockito-core:" + Versions.mockito_core
